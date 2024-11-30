@@ -1,7 +1,7 @@
 .MODEL SMALL
 
 .DATA
-    NUM Dw 18
+    NUM Dw 48
 
 .CODE
   ;=============================================================================
@@ -16,16 +16,16 @@
 
      DRAW_NUM PROC
     
-        ; NUM IS IN AX
+     ; AX: NUM  
     
-        MOV BP, SP
+        MOV BP, SP  ; SAVE THE CURRENT STACK POINTER IN (BP)
         
       CONVERT:
     
         MOV BX,10
         MOV DX,0
-        DIV BX
-        ADD DX,48
+        DIV BX     ; AX = AX / 10
+        ADD DX,48  ; CONVERT REMAINDER INTO ASCII
         
         PUSH DX
         
@@ -39,7 +39,7 @@
         INT     21H
         
         CMP     BP, SP
-        JZ      NUM_PRINTED
+        JZ      NUM_PRINTED ; JUMP WHEN SP RETURN TO IT'S FIRST VALUE
         JMP     PRINT
         
       NUM_PRINTED:
