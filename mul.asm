@@ -1,7 +1,6 @@
 .model small
 .386
  .data 
-
 A DW 100 DUP(0)
 B DW 100 DUP(0)
 C DW 100 DUP(0)
