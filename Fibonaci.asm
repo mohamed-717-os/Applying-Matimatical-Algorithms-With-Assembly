@@ -1,14 +1,8 @@
 .model small       
-.stack 100h        
-
-.data              
-    count DW ?
-    input DB "enter number of Iteration:","$"
 
 .code              
-main proc         
-    .startup 
-    
+FIB_CALL proc         
+  
     lea dx , input 
     mov ah , 9h 
     int 21h
@@ -21,9 +15,7 @@ main proc
       
     call fibonacci 
 
-    .exit
-
-main endp
+FIB_CALL endp
 
 fibonacci proc
     
@@ -67,80 +59,8 @@ base_case_1:
     
     mov ax, 1
     call DRAW_NUM
-    
-    
-  
-    
-         
+      
 end_fi:
     ret        
     
 fibonacci endp
- ;=============================================================================
-
-     DRAW_NUM PROC
-            
-     ;ax => input  
-        PUSH AX
-        PUSH BX
-        MOV BP, SP  ; SAVE THE CURRENT STACK POINTER IN (BP)
-
-        
-      CONVERT:
-    
-        MOV BX,10
-        MOV DX,0
-        DIV BX     ; AX = AX / 10
-        ADD DX,48  ; CONVERT REMAINDER INTO ASCII
-        
-        PUSH DX
-        
-        CMP AX, 0
-        Je  PRINT
-        JMP CONVERT
-        
-      PRINT:
-        POP     DX
-        MOV     AH,02
-        INT     21H
-        
-        CMP     BP, SP
-        Je      NUM_PRINTED ; JUMP WHEN SP RETURN TO IT'S FIRST VALUE
-        JMP     PRINT
-        
-      NUM_PRINTED:  
-       POP BX
-       POP AX
-       
-       RET 
-    DRAW_NUM ENDP
-  ;=============================================================================
-   read_number PROC 
-        MOV BX, 0
-    read_num:
-        MOV AH, 01h 
-        INT 21h
-        
-        CMP AL, 0dh  
-        JE done_reading
-        
-        XOR AH, AH
-        SUB AL, '0'
-        
-        mov si , ax
-        mov ax , bx 
-        xor dx , dx 
-         
-        mov cx , 10 
-        
-        mul cx
-        add si , ax 
-        mov bx , si 
-        
-        JMP read_num
-     
-    done_reading:
-        RET
-    read_number ENDP
-
-end main             

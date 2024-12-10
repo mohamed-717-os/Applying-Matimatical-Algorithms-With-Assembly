@@ -1,71 +1,5 @@
-;=============================================================================
-;                     Procedures In This File Are:
-;============================================================================= 
-;                     1- COMBINATION
-;                     2- PERMUTATIONS
-;                     3- FACTORIAL
-;                     4- PRINT NUMBER
-;                     5- PRINT ARRAY
-;=============================================================================
-
 .MODEL SMALL
-.386
-.DATA
-N DD 3
-R DD 2
-.CODE
-    MAIN PROC FAR
-      .STARTUP       
-      PUSH N 
-      PUSH R
-      CALL PER
-      ADD SP,8
-      CALL DRAW_NUM
-      .EXIT
-    MAIN ENDP
-;=============================================================================
-;                       COMBINATION
-;============================================================================= 
-    COMB PROC
 
-    ; EAX <= RESULT
-    PUSH EDI
-    PUSH ECX
-    PUSH EBX
-    
-    MOV BP,SP
-    MOV EDI,[BP+14] ;=> R
-    MOV ECX,[BP+18] ;=> N
-    
-    MOV EBX,ECX   
-    CALL FACTORIAL
-    PUSH EBX    ;=> N!
-    
-    MOV EBX,EDI   
-    CALL FACTORIAL    
-    
-    
-    MOV EAX,EBX ;=> R!
-   
-        
-    SUB ECX,EDI ;=> (N-R)    
-    MOV EBX,ECX
-    CALL FACTORIAL  ; EBX = (N-R)!
-    
-    
-    MUL EBX ;=> R! * (N-R)!     
-    MOV EBX,EAX ; EBX = R! * (N-R)! 
-    
-    
-    POP EAX ;=> N!
-    XOR EDX,EDX
-    DIV EBX ;=> N! / I! * (N-I)!
-    
-    POP EBX
-    POP ECX
-    POP EDI
-    RET
-    COMB ENDP
 ;============================================================================= 
 ;                       PERMUTATIONS
 ;============================================================================= 
@@ -99,29 +33,10 @@ R DD 2
     POP EBX
     POP ECX
     POP EDI
+    CALL DRAW_NUM
     RET
     PER ENDP
-;=============================================================================
-;                        FACTORIAL
-;=============================================================================    
-    FACTORIAL proc
-    ; EBX <= NUM   LOCATION OF STORING
-    ; EBX = INPUT
-    PUSH EAX    
-    MOV EAX, 1 ; Multiply neutral    
-    REC:
-    CMP EBX,0
-    JE FINISHED 
-    MUL EBX
-    DEC EBX 
-        Jnz REC ;Exit WHEN BX BECAME 0
-        JMP FINISHED
-     
-    FINISHED:
-        MOV EBX,EAX
-        POP EAX
-        RET
-  FACTORIAL ENDP
+
 ;=============================================================================
 ;                           PRINT NUMBER                          
 ;============================================================================= 
@@ -157,35 +72,30 @@ R DD 2
        RET 
     DRAW_NUM ENDP
 ;=============================================================================
-;                               PRINT ARRAY  
+;                           CLEAR ARRAY                          
 ;=============================================================================
-           ; ARRAY [ROW,COL, ..ELEMENTS..]              
-     PRINT_ARRAY PROC
-                        
-            MOV DI,C[2] ; STORING COL'S NUM
-            MOV SI,4    ; POINT TO THE FIRST ELEMENT
-            MOV CX, C[0] ; STORING ROW'S NUM
-       PRINT_ROW:
-           MOV AX, [SI]
-           CALL DRAW_NUM
-           MOV DL, ' '
-           MOV AH, 2
-           INT 21H
-           
-           ADD SI,2
-           DEC DI
+    CLEAR_ARRAY PROC
+            PUSHA
+            MOV BP, SP
+            MOV SI, [BP+18]  ;> ARRAY OFFSET
 
-           JNZ PRINT_ROW
-                              
-        PRINT_COL:
-           MOV DI,C[2]
-           
-           MOV DL, 10
-           MOV AH, 2
-           INT 21H
+            MOV AX, [SI]
+            XOR DX, DX
+            MOV BX, [SI+2]
+            MUL BX
 
-           LOOP PRINT_ROW
+            MOV CX, AX
+            ADD SI, 4 
+
+           CLEAR:
+
+              MOV AX, 0
+              MOV [SI], AX
+              ADD SI, 2
+
+             LOOP CLEAR
+
+           POPA
            RET
-           PRINT_ARRAY ENDP  
+        CLEAR_ARRAY ENDP
 ;=============================================================================
-END MAIN

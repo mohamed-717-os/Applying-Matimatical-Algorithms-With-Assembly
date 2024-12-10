@@ -1,45 +1,55 @@
 .model small
-.386 
-.DATA
-    HEIGHT DD 8
-    N DD 0 ; -> HEIGHT
-    I DD 0 ; -> N
-    CSIZE DD 0 ; -> RESULT'S SIZE
-    NUM DD ?
-    C DD 100 dup(0)
 .CODE 
-MAIN PROC
-    .STARTUP
+
+PASCAL_CALL PROC
+
+    LEA DX,PT_MSG
+    MOV AH,9H
+    INT 21H
     
+    CALL read_number
+
+    ; CLEAR ARRAY         
+        PUSH OFFSET TRI
+        PUSH 20
+        CALL CLEAR_ARRAY  
+        
     CALL PASCAL
-    CALL PRINT_ARRAY
     
-    .EXIT
-    MAIN ENDP
+        
+    CALL PRINT_TRIANGLE
+
+PASCAL_CALL ENDP
+
 ;=============================================================================
 ;                           PASCAL TRIANGLE
 ;=============================================================================
-    PASCAL PROC
-         MOV SI,OFFSET C
+    PASCAL PROC     
+    
+    MOV SI,OFFSET TRI
+    MOV HEIGHT,EBX
+    MOV T,0
         OUTER:
             MOV I,0
         INNER:
-            PUSH N
+            PUSH T
             PUSH I
             CALL COMB
-            ADD SP,8
             
             MOV [SI],EAX
+            
             ADD SI,4
             INC I
-            MOV ECX,N
+            MOV ECX,T
             CMP I,ECX
             JLE INNER
-            INC N
-            MOV ECX,N
+            INC T
+            MOV ECX,T
             CMP ECX,HEIGHT
-            JL OUTER   
+            JL OUTER
+            
             RET
+            
     PASCAL ENDP
  ;============================================================================= 
  ;                           COMBINATION
@@ -82,7 +92,7 @@ COMB PROC
     POP EBX
     POP ECX
     POP EDI
-    RET
+    RET 8
     COMB ENDP
 ;=============================================================================
 ;                               FACTORIAL
@@ -107,18 +117,23 @@ COMB PROC
         RET
   FACTORIAL ENDP
 ;=============================================================================
-;                               PRINT ARRAY  
+;                               PRINT TRIANGLE  
 ;============================================================================= 
                          
-     PRINT_ARRAY PROC
+     PRINT_TRIANGLE PROC
+     
+      LEA DX,ARRAY_RESULT_MSG
+            MOV AH,9H
+            INT 21H
+            
         MOV ECX,CSIZE 
         MOV EBX,0
         MOV EDI,I
         MOV NUM,EDI
-        MOV N,0
+        MOV T,0
         MOV SI,0
-        LEA SI,C
-       PRINT_ROW:
+        LEA SI,TRI
+        PRINT_TROW:
         CENTER:
         MOV DL, ' '
            MOV AH, 2
@@ -126,9 +141,9 @@ COMB PROC
            DEC NUM
            JNZ CENTER
 
-        START:
+       START1:
                       
-           MOV EAX, [SI]
+           MOV EAX, [SI]           
            CMP EAX,0
            JE PFINISH
            PUSH EBX
@@ -142,8 +157,8 @@ COMB PROC
            
            POP EBX
            INC EBX          
-           CMP EBX,N
-           JLE START
+           CMP EBX,T
+           JLE START1
            
            MOV DL,10    ; next row
            MOV AH, 2
@@ -155,49 +170,13 @@ COMB PROC
            MOV EDI,I
            MOV NUM,EDI
            
-           INC N
-           MOV EDI,N
+           INC T
+           MOV EDI,T
            CMP EDI,HEIGHT
            JL CENTER
            JE PFINISH
 
            PFINISH: 
            RET
-           PRINT_ARRAY ENDP  
-;============================================================================= 
-;                           PRINT NUMBER                          
-;============================================================================= 
-    DRAW_NUM PROC
-    
-     ; AX: NUM  
-    
-        MOV BP, SP  ; SAVE THE CURRENT STACK POINTER IN (BP)
-        
-      CONVERT:
-    
-        MOV EBX,10
-        MOV EDX,0
-        DIV EBX     ; AX = AX / 10
-        ADD EDX,48  ; CONVERT REMAINDER INTO ASCII
-        
-        PUSH DX
-        
-        CMP EAX, 0
-        Je  PRINT
-        JMP CONVERT
-        
-      PRINT:
-        POP     DX
-        MOV     AH,02
-        INT     21H
-        
-        CMP     BP, SP
-        Je      NUM_PRINTED ; JUMP WHEN SP RETURN TO IT'S FIRST VALUE
-        JMP     PRINT
-        
-      NUM_PRINTED:
-       RET 
-    DRAW_NUM ENDP
-;=============================================================================
-END
-    
+           PRINT_TRIANGLE ENDP  
+     
