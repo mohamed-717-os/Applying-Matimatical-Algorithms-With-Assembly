@@ -1,6 +1,34 @@
 .model small
 .386 
 .code
+MAT_CALL PROC
+
+    CALL INPUT    
+        MOV AX,A[2]
+        CMP AX,B[0]
+        JNE NOT_VERIFIEDD
+        
+     
+    PUSH OFFSET A             
+    PUSH OFFSET B
+    
+    CALL MAT_MUL  ; RESULT IN C
+  
+    CALL PRINT_ARRAY
+    JMP VERIFIED
+NOT_VERIFIEDD:
+   LEA DX,NOT_VERIFIED
+   MOV AH,9H
+   INT 21H
+  
+   JMP START_POINT
+   
+VERIFIED:
+    RET
+
+MAT_CALL ENDP
+
+
 ;=============================================================================
 ;                           TAKING MATRIX AS INPUT
 ;============================================================================= 
@@ -11,99 +39,68 @@
         
         ; CLEAR A         
         PUSH OFFSET A
-        PUSH 10
+        PUSH 30
         CALL CLEAR_ARRAY  
         
         ; CLEAR B         
         PUSH OFFSET B
-        PUSH 10
+        PUSH 30
         CALL CLEAR_ARRAY  
         
-        ; Reading Matrix A
-        
-        LEA DX, row_input ; Read row num
+        MOV SI, OFFSET A
+        MOV CX, 1
+      MAT_INPUT_LOOP:
+    
+       ; DEFINE ROWS AND COLS
+        LEA DX, MAT_INPUT 
         MOV AH, 9h 
         INT 21h 
         
-        CALL read_number
-        MOV A[0], BX   ; Store number of rows
-        
-        LEA DX, col_input ; Read col num
-        MOV AH, 9h 
+        MOV AX, CX     ; MATRIX 1 OR 2
+        CALL DRAW_NUM
+
+        MOV AH, 2h 
+        MOV DL, ':' ; Read row num
+        INT 21h 
+        MOV DL, ' ' ; Read row num
         INT 21h 
         
         CALL read_number
-        MOV A[2], BX   ; Store number of columns
-  
-        ; Read elements of A
+        MOV SI[0], BX   ; Store number of rows
+                
+        
+        MOV AH, 2h      
+        MOV DL, 'x'  
+        INT 21h         
+        MOV DL, ' '
+        INT 21H
+        
+        CALL read_number
+        MOV SI[2], BX   ; Store number of columns
+        
+      ; READING THE VALUES OF THE MATRIX
         LEA DX, MAT_ELEMENTS
         MOV AH, 9h 
         INT 21h
-
-        MOV BX, A[0] ; Number of rows
-        MOV AX, A[2] ; Number of cols
-        MUL BX        ; Rows * Cols = Number of elements
-  
-        MOV CX, AX
-        MOV SI, OFFSET A[4]
         
-    row_input_loop_A:
+        MOV DX, SI[0] ; Number of rows
+        MOV AX, SI[2] ; Number of cols
+        MUL DX        ; AX = Rows * Cols = Number of elements
+        
+        ADD SI, 4
+        
+    ENTER_MAT_VALUES:
         ; Read row element
         CALL read_number
         MOV [SI], BX
         ADD SI, 2
-        LOOP row_input_loop_A
-
-        
-        ; Reading Matrix B
-        
-        
-        LEA DX, row_input 
-        MOV AH, 9h 
-        INT 21h 
-        
-        CALL read_number
-        CMP A[2] ,BX
-        
-        JNE WRONG_MATINPUT
-        
-        MOV B[0], BX   
-        
-        LEA DX, col_input 
-        MOV AH, 9h 
-        INT 21h 
-        
-        CALL read_number
-        MOV B[2], BX   
-        
-        LEA DX, MAT_ELEMENTS
-        MOV AH, 9h 
-        INT 21h
-        
-        MOV DX, B[0] 
-        MOV AX, B[2] 
-        MUL DX        
-        
-        MOV CX, AX
-        MOV SI, OFFSET B[4]
-        
-    row_input_loop_B:
-        
-        CALL read_number
-        MOV [SI], BX
-        ADD SI, 2
-        DEC CX
-        JNZ row_input_loop_B
-        JMP END_MATINPUT
-        
-      WRONG_MATINPUT:
-        
-            LEA DX,NOT_VERIFIED
-            MOV AH,9H
-            INT 21H
+        DEC AX
+        JNZ ENTER_MAT_VALUES
     
-        END_MATINPUT:
-            
+      MOV SI, OFFSET B
+      INC CX
+      CMP CX, 2
+      JLE MAT_INPUT_LOOP        
         POPA
         RET
         INPUT ENDP
@@ -314,7 +311,8 @@
     DRAW_NUM PROC
     
     ; EAX: NUM  
-        PUSHA
+        PUSH AX
+        PUSH BX
         MOV BP, SP  ; SAVE THE CURRENT STACK POINTER IN (BP)
         
       CONVERT:
@@ -340,7 +338,8 @@
         JMP     PRINT
         
       NUM_PRINTED:
-       POPA
+       POP BX
+       POP AX
        RET 
     DRAW_NUM ENDP
 ;=============================================================================

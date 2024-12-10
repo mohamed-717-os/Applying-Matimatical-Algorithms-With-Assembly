@@ -1,41 +1,5 @@
 .MODEL SMALL
 
-;============================================================================= 
-;                       PERMUTATIONS
-;============================================================================= 
-    PER PROC
-
-    ; EAX <= RESULT
-    PUSH EDI
-    PUSH ECX
-    PUSH EBX
-    
-    MOV BP,SP
-    MOV EDI,[BP+14] ;=> R
-    MOV ECX,[BP+18] ;=> N
-    
-    MOV EBX,ECX   
-    CALL FACTORIAL
-    PUSH EBX    ;=> N!
-    
-    MOV EBX,EDI   
-    CALL FACTORIAL    
-   
-        
-    SUB ECX,EDI ;=> (N-R)    
-    MOV EBX,ECX
-    CALL FACTORIAL  ; EBX = (N-R)!    
-    
-    POP EAX ;=> N!
-    XOR EDX,EDX
-    DIV EBX ;=> N! /(N-I)!
-    
-    POP EBX
-    POP ECX
-    POP EDI
-    CALL DRAW_NUM
-    RET
-    PER ENDP
 
 ;=============================================================================
 ;                           PRINT NUMBER                          

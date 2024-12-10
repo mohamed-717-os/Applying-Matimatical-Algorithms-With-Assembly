@@ -23,17 +23,19 @@ LOGO  db "  __  __       _   _                          _   _           _ ", 10,
 DOC DB " +-------------+---------------------------------------------+", 10,13,
     DB "| Command     | Description                                 |", 10,13,
     DB "+-------------+---------------------------------------------+", 10,13,
-    DB "| F           | Calculate factorial of a number             |", 10,13,
+    DB "| !           | Calculate factorial of a number             |", 10,13,
     DB "| FI          | Generate a Fibonacci sequence               |", 10,13,
     DB "| LR          | Perform linear regression                   |", 10,13,
     DB "| PT          | Display Pascal's Triangle                   |", 10,13,
     DB "| HELP        | List available commands                     |", 10,13,
+    DB "| HOME        | BACK TO THE HIME PAGE                       |",10,13,
     DB "+-------------+---------------------------------------------+", '$'  
 
 
 
                                                                            
-.CODE                                                                  
+.CODE  
+                                                                
     DOC_PAGE PROC FAR
       .STARTUP
        
@@ -58,4 +60,4 @@ DOC DB " +-------------+---------------------------------------------+", 10,13,
       
 
     DOC_PAGE ENDP
-END MAIN
+END DOC_PAGE
