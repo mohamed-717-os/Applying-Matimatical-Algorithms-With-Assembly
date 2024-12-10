@@ -1,18 +1,29 @@
 .model small
 .386
  .data
+ 
+ ; THERE IS 2 INDICES BEFORE THE CONTENT OF THE MATRIX
+ ; THE FIRST INDEX IS THE NUMBER OF ROWS
+ ; THE SECOND INDEX IS THE NUMBER OF COLUMNS
+    
     ; First matrix (A)
-    A DW 2,2,  1,2,3,4 ; ROW,COL,  ELEMENTS
+    A DW 1,4,  -5,-6,-7,-8 ; ROW,COL,  ELEMENTS
     ; Second matrix (B)
-    B DW 2,2,  2,4,6,8
+    B DW 4,1,  1,2,3,4
+    C DW 1,1,  0,0,0,0
     ; Result matrix (C)
-    C DW 2,2,  0,0,0,0
-    COUNT_ELEMENT DW 4 ; NUMBER OF MATRIX ELEMENTS
-    ; YOU MUST ADD 2 FOR EVERY INDEX 
- .code 
+    
+    ROW_NUM DW ?
+    COL_NUM DW ?
+       
+.code 
+ ; =========================================================== 
     MAIN proc far
       .STARTUP
+            PUSH OFFSET A
+            PUSH OFFSET B
             CALL MULTIPLICATION
+            ADD SP, 4
             CALL PRINT_ARRAY          
       .EXIT
     MAIN endp
@@ -21,58 +32,72 @@
 ;              MATRIX MULTIPLICATION
 
     MULTIPLICATION PROC 
-        POP BP
+        PUSHA
+        MOV BP, SP
+        
+        MOV SI, [BP+20]  ; SI = A
+        MOV DI, [BP+18]  ; DI = B
+        
       ; ITIALIZE ROWS AND COLS OF THE RESULT
-        MOV AX, A[0]
+        MOV AX, SI[0]
         MOV C[0], AX
         
-        MOV AX, B[2]
+        MOV AX, DI[2]
         MOV C[2], AX
         ;--------------
         
-        MOV CX,0
+        MOV ROW_NUM,0
         ROW_LOP:
-            MOV SI,0
            
+            MOV COL_NUM,0
             COL_LOP:
-                MOV DI,0
+                MOV CX,0
                
                 MUL_LOP:
-                   ;GET A'S INDEX
-                   PUSH A[2]
-                   PUSH CX
-                   PUSH DI
+                 ;GET A'S INDEX
+                   PUSH SI[2]      ; NUM OF COLS
+                   PUSH ROW_NUM        ; INDEX OF ROW
+                   PUSH CX        ; INDEX OF COL
                    CALL MAT_INDEX
-                   MOV AX,A[BX] ;STORING A'S ELEMENT
+                   ADD SP, 6       
+                   
+                   MOV AX,SI[BX] ;STORING A'S ELEMENT
                    
                    ;GET B'S INDEX
-                   PUSH B[2]
-                   PUSH DI
-                   PUSH SI
+                   PUSH DI[2]
+                   PUSH CX
+                   PUSH COL_NUM
                    CALL MAT_INDEX
+                   ADD SP, 6  
                    
-                   MUL B[BX];THE RESULT OF C[CX, SI]
+                   MUL DI[BX];THE RESULT OF C[ROW_NUM, COL_NUM]
                    
                    ;GET C'S INDEX
-                   PUSH B[2]
-                   PUSH CX
-                   PUSH SI
+                   PUSH DI[2]
+                   PUSH ROW_NUM
+                   PUSH COL_NUM
                    CALL MAT_INDEX
+                   ADD SP, 6  
                    
                    ADD C[BX],AX ;STORING THE RESULT
                    
-                   INC DI
-                   CMP DI,A[2]
+                   INC CX
+                   CMP CX,SI[2]
                    JL MUL_LOP
                    
-                   INC SI
-                   CMP SI,B[2]
-                   JL COL_LOP
-                
-            INC CX
-            CMP CX,A[0]
+               INC COL_NUM
+               
+               MOV AX, DI[2]
+               CMP COL_NUM, AX
+               JL COL_LOP
+            
+            INC ROW_NUM
+            
+            MOV AX, SI[0]
+            CMP ROW_NUM, AX
             JNZ ROW_LOP
-        PUSH BP     
+        
+        POPA
         RET
     MULTIPLICATION ENDP       
                         

@@ -4,9 +4,9 @@
 
 .data 
 
-A DW ?
-B DW ?
-C DW ?
+A DW 100 DUP(0)
+B DW 100 DUP(0)
+C DW 100 DUP(0)
 
 row_input DB 'enter the number of rows: $'
 col_input DB 'enter the number of columns: $'
@@ -57,8 +57,7 @@ row_elements DB 'enter the elements of the rows for matrix  (space separated): '
 
         
         ; Reading Matrix B
-        
-        
+              
         LEA DX, row_input 
         MOV AH, 9h 
         INT 21h 
