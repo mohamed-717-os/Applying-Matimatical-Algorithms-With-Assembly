@@ -1,5 +1,6 @@
 .model small
 .386
+<<<<<<< HEAD
  .data
  
  ; THERE IS 2 INDICES BEFORE THE CONTENT OF THE MATRIX
@@ -24,12 +25,139 @@
             PUSH OFFSET B
             CALL MULTIPLICATION
             ADD SP, 4
+=======
+ .data 
+A DW 100 DUP(0)
+B DW 100 DUP(0)
+C DW 100 DUP(0)
+
+row_input DB 'enter the number of rows: $'
+col_input DB 'enter the number of columns: $'
+row_elements DB 'enter the elements of the rows for matrix  (space separated): ', 13, 10, '$'
+RESULT_MSG DB 'RESULT: ',10,13,'$'
+
+ .code 
+    MAIN proc far
+      .STARTUP
+            CALL INPUT
+            CALL MULTIPLICATION
+            LEA DX,RESULT_MSG
+            MOV AH,9H
+            INT 21H
+>>>>>>> 2e7d82ae06215881e5b9a29ddb0ec9963fe42d60
             CALL PRINT_ARRAY          
       .EXIT
     MAIN endp
-    
-; ===========================================================   
-;              MATRIX MULTIPLICATION
+
+;=============================================================================
+;                           TAKING MATRIX AS INPUT
+;============================================================================= 
+
+        INPUT PROC
+        
+        ; Reading Matrix A
+        
+        LEA DX, row_input ; Read row num
+        MOV AH, 9h 
+        INT 21h 
+        
+        CALL read_number
+        MOV A[0], BX   ; Store number of rows
+        
+        LEA DX, col_input ; Read col num
+        MOV AH, 9h 
+        INT 21h 
+        
+        CALL read_number
+        MOV A[2], BX   ; Store number of columns
+        
+        ; Read elements of A
+        LEA DX, row_elements
+        MOV AH, 9h 
+        INT 21h
+        
+        MOV DX, A[0] ; Number of rows
+        MOV AX, A[2] ; Number of cols
+        MUL DX        ; Rows * Cols = Number of elements
+        
+        MOV CX, AX
+        MOV SI, OFFSET A[4]
+        
+    row_input_loop_A:
+        ; Read row element
+        CALL read_number
+        MOV [SI], BX
+        ADD SI, 2
+        DEC CX
+        JNZ row_input_loop_A
+
+        
+        ; Reading Matrix B
+        
+        
+        LEA DX, row_input 
+        MOV AH, 9h 
+        INT 21h 
+        
+        CALL read_number
+        MOV B[0], BX   
+        
+        LEA DX, col_input 
+        MOV AH, 9h 
+        INT 21h 
+        
+        CALL read_number
+        MOV B[2], BX   
+        
+        LEA DX, row_elements
+        MOV AH, 9h 
+        INT 21h
+        
+        MOV DX, B[0] 
+        MOV AX, B[2] 
+        MUL DX        
+        
+        MOV CX, AX
+        MOV SI, OFFSET B[4]
+        
+    row_input_loop_B:
+        
+        CALL read_number
+        MOV [SI], BX
+        ADD SI, 2
+        DEC CX
+        JNZ row_input_loop_B
+        RET
+        INPUT ENDP
+; ===============================================================
+;                        READ NUMBER
+; ===============================================================
+    read_number PROC 
+    ;BX <= NUM
+        MOV BX, 0
+    read_num:
+        MOV AH, 01h 
+        INT 21h
+        
+        CMP AL, ' '
+        JE done_reading
+        CMP AL, 0dh  
+        JE done_reading
+        
+        XOR AH, AH
+        SUB AL, '0'
+
+        SHL BX, 5
+        ADD BX, AX
+        
+        JMP read_num
+     
+    done_reading:
+        RET
+    read_number ENDP   
+;=============================================================================
+;                            MATRIX MULTIPLICATION
+;=============================================================================   
 
     MULTIPLICATION PROC 
         PUSHA
@@ -100,8 +228,10 @@
         POPA
         RET
     MULTIPLICATION ENDP       
-                        
-; ===========================================================   
+;=============================================================================
+;                           GETTING INDEX IN MATRIX  
+;============================================================================= 
+
     MAT_INDEX PROC 
    ; MAT_INDEX (C, I, J)         
    ;  => BX: C * I +J
@@ -137,7 +267,8 @@
         RET
     MAT_INDEX ENDP
 ;=============================================================================
-
+;                           PRINT NUMBER                          
+;============================================================================= 
     DRAW_NUM PROC
     
      ; AX: NUM  
@@ -169,13 +300,17 @@
       NUM_PRINTED:
        RET 
     DRAW_NUM ENDP
-;============================================================================= 
-     PRINT_ARRAY PROC     
-            MOV DI,C[2]
-            MOV SI,4
-            MOV CX, C[0]
+;=============================================================================
+;                               PRINT ARRAY  
+;=============================================================================
+           ; ARRAY [ROW,COL, ..ELEMENTS..]              
+     PRINT_ARRAY PROC
+                        
+            MOV DI,C[2] ; STORING COL'S NUM
+            MOV SI,4    ; POINT TO THE FIRST ELEMENT
+            MOV CX, C[0] ; STORING ROW'S NUM
        PRINT_ROW:
-           MOV AX, C[SI]
+            MOV AX,C[SI]
            CALL DRAW_NUM
            MOV DL, ' '
            MOV AH, 2
