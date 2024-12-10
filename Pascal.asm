@@ -1,6 +1,15 @@
 .model small
 .CODE 
 
+;==================================================================
+;==================================================================                
+;/////////////////////////CALL PROCEDURES//////////////////////////
+;==================================================================
+;==================================================================
+
+;=============================================================================
+;                           PASCAL CALL
+;=============================================================================
 PASCAL_CALL PROC
 
     LEA DX,PT_MSG
@@ -18,12 +27,123 @@ PASCAL_CALL PROC
     
         
     CALL PRINT_TRIANGLE
+    
+    RET
 
 PASCAL_CALL ENDP
 
 ;=============================================================================
+;                           FACTORIAL CALL
+;=============================================================================
+FACT_CALL PROC
+
+    XOR EBX,EBX
+    
+    LEA DX,FACT_MSG
+    MOV AH,9H
+    INT 21H
+    CALL read_number
+    
+    LEA DX,NUM_RESULT_MSG
+    MOV AH,9H
+    INT 21H
+    
+    CALL FACTORIAL
+    
+    MOV EAX,EBX  
+    CALL DRAW_NUM
+    
+    RET
+
+    FACT_CALL ENDP
+
+;=============================================================================
+;                           COMBINATION CALL
+;=============================================================================
+
+COMP_CALL PROC
+    
+    MOV N,0
+    MOV R,0
+    
+    CALL read_number
+    MOV N,EBX
+    
+        MOV AH, 2h      
+        MOV DL, 'C'  
+        INT 21h         
+        MOV DL, ' '
+        INT 21H
+        
+    CALL read_number
+    MOV R,EBX
+    
+        MOV AH, 2h      
+        MOV DL, '='  
+        INT 21h         
+        MOV DL, ' '
+        INT 21H
+        
+    PUSH N
+    PUSH R
+    
+    XOR EAX,EAX
+        
+    CALL COMP
+    CALL DRAW_NUM
+     
+    RET 
+
+COMP_CALL ENDP
+
+
+;=============================================================================
+;                           PERMUTATION CALL
+;=============================================================================
+
+    PER_CALL PROC
+    
+    MOV N,0
+    MOV R,0
+    
+    CALL read_number
+    MOV N,EBX
+    
+        MOV AH, 2h      
+        MOV DL, 'P'  
+        INT 21h         
+        MOV DL, ' '
+        INT 21H
+        
+    CALL read_number
+    MOV R,EBX
+    
+        MOV AH, 2h      
+        MOV DL, '='  
+        INT 21h         
+        MOV DL, ' '
+        INT 21H
+        
+    PUSH N
+    PUSH R
+    
+    XOR EAX,EAX
+    
+    CALL PER
+    CALL DRAW_NUM
+     
+    RET 
+
+    PER_CALL ENDP
+    
+;============================================================================= 
+;============================================================================= 
+
+
+;=============================================================================
 ;                           PASCAL TRIANGLE
 ;=============================================================================
+
     PASCAL PROC     
     
     MOV SI,OFFSET TRI
@@ -34,7 +154,7 @@ PASCAL_CALL ENDP
         INNER:
             PUSH T
             PUSH I
-            CALL COMB
+            CALL COMP
             
             MOV [SI],EAX
             
@@ -51,10 +171,11 @@ PASCAL_CALL ENDP
             RET
             
     PASCAL ENDP
- ;============================================================================= 
- ;                           COMBINATION
+    
+;============================================================================= 
+;                               COMBINATION
 ;=============================================================================
-COMB PROC
+COMP PROC
 
     ; EAX <= RESULT
     PUSH EDI
@@ -92,8 +213,46 @@ COMB PROC
     POP EBX
     POP ECX
     POP EDI
+    
     RET 8
-    COMB ENDP
+    COMP ENDP
+    
+;============================================================================= 
+;                       PERMUTATIONS
+;============================================================================= 
+    PER PROC
+
+    ; EAX <= RESULT
+    PUSH EDI
+    PUSH ECX
+    PUSH EBX
+    
+    MOV BP,SP
+    MOV EDI,[BP+14] ;=> R
+    MOV ECX,[BP+18] ;=> N
+    
+    MOV EBX,ECX   
+    CALL FACTORIAL
+    PUSH EBX    ;=> N!
+    
+    MOV EBX,EDI   
+    CALL FACTORIAL    
+   
+        
+    SUB ECX,EDI ;=> (N-R)    
+    MOV EBX,ECX
+    CALL FACTORIAL  ; EBX = (N-R)!    
+    
+    POP EAX ;=> N!
+    XOR EDX,EDX
+    DIV EBX ;=> N! /(N-I)!
+    
+    POP EBX
+    POP ECX
+    POP EDI
+    RET 8
+    PER ENDP
+
 ;=============================================================================
 ;                               FACTORIAL
 ;============================================================================= 
