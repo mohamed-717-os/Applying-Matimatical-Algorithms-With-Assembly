@@ -1,13 +1,18 @@
+; PROSEDURES IN THIS FILE IS:
+    ; * DRAW_NUM
+    ; * DRAW_NUM
+    
 .MODEL SMALL
-
+.CODE
 
 ;=============================================================================
-;                           PRINT NUMBER                          
+;                    PRINTING HEXA NUMBERS AS DECIMAL                  
 ;============================================================================= 
     DRAW_NUM PROC
     
-     ; AX: NUM  
-    
+    ; EAX: NUM  
+        PUSH AX
+        PUSH BX
         MOV BP, SP  ; SAVE THE CURRENT STACK POINTER IN (BP)
         
       CONVERT:
@@ -33,33 +38,49 @@
         JMP     PRINT
         
       NUM_PRINTED:
+       POP BX
+       POP AX
        RET 
     DRAW_NUM ENDP
-;=============================================================================
-;                           CLEAR ARRAY                          
-;=============================================================================
-    CLEAR_ARRAY PROC
-            PUSHA
-            MOV BP, SP
-            MOV SI, [BP+18]  ;> ARRAY OFFSET
+    
+; ===============================================================
+;          READING NUMBERS WITH ANY NUMBER OF DIGITS
+; ===============================================================
 
-            MOV AX, [SI]
-            XOR DX, DX
-            MOV BX, [SI+2]
-            MUL BX
-
-            MOV CX, AX
-            ADD SI, 4 
-
-           CLEAR:
-
-              MOV AX, 0
-              MOV [SI], AX
-              ADD SI, 2
-
-             LOOP CLEAR
-
-           POPA
-           RET
-        CLEAR_ARRAY ENDP
-;=============================================================================
+    read_number PROC 
+    PUSH SI
+    PUSH AX
+    PUSH CX
+    MOV BX, 0
+    read_num:
+        MOV AH, 01h 
+        INT 21h
+        
+        CMP AL, 0dh  
+        JE done_reading
+        CMP AL, ' '  
+        JE done_reading
+        
+        XOR AH, AH
+        SUB AL, '0'
+        
+        mov si , ax
+        mov ax , bx 
+        xor dx , dx 
+         
+        mov cx , 10 
+        
+        mul cx
+        add si , ax 
+        mov bx , si 
+        
+        JMP read_num
+        
+    done_reading:
+        POP CX
+        POP AX
+        POP SI
+        RET
+   read_number ENDP
+   
+  

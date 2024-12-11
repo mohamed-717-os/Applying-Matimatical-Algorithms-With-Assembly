@@ -4,7 +4,7 @@
 ;////////////////////////////PASCAL////////////////////////////////
 ;================================================================== 
 
-    PT_MSG DB "ENTER THE HEIGHT OF TRIANGLE : ","$"
+    PT_MSG DB " ENTER THE HEIGHT OF TRIANGLE : ","$"
     HEIGHT DD ?
     T DD 0 ; -> HEIGHT
     I DD 0 ; -> N
@@ -38,7 +38,7 @@ NOT_VERIFIED DB "ROW NUMBER OF 1ST MATRIX DON'T MATCH COLUMN NUMBER OF 2ND MATRI
 ;==================================================================
 
 count DW ?
-input DB "Enter Number Of Iterations:","$"
+input DB " Enter Number Of Iterations:","$"
     
 ;==================================================================                
 ;////////////////////COMPINATION & PERMUTATION/////////////////////
@@ -47,48 +47,58 @@ input DB "Enter Number Of Iterations:","$"
 N DD ?
 R DD ?
 
+INPUT_MSG DB " The Equation: ", "$"
 ;==================================================================                
 ;///////////////////////////FACTORIAL//////////////////////////////
 ;==================================================================
 
-FACT_MSG DB "ENTER THE NUMBER : ","$"
+FACT_MSG DB " ENTER THE NUMBER : ","$"
 
 ;==================================================================
 ;/////////////////////OPERATIONS DEFINATION////////////////////////
 ;==================================================================
-OPS DB 10 DUP(1)
-HELP DB "HELP","$" ; 0
-LINEAR_DEF DB "LR","$" ; 1
-MATRIX_DEF DB "MM","$" ; 2
-PASCAL_DEF DB "PT","$" ; 3
-FIBONACCI_DEF DB "FI","$" ; 4
-COMPINATION_DEF DB "C","$" ; 5
-PERMUTATION_DEF DB "P","$"; 6
-FACTORIAL_DEF DB "!","$"; 7
-EXIT DB "EXIT","$"; 8
-CLEAR_SCREEN DB "CLS",'$';9
 
+OPS_NUM = 10
+
+OPS DW OPS_NUM DUP(1)
+
+HELP            DB "HELP","$"   ; 0
+LINEAR_DEF      DB "LR","$"     ; 1
+MATRIX_DEF      DB "MM","$"     ; 2
+PASCAL_DEF      DB "PT","$"     ; 3
+FIBONACCI_DEF   DB "FI","$"     ; 4
+COMPINATION_DEF DB "C","$"      ; 5
+PERMUTATION_DEF DB "P","$"      ; 6
+FACTORIAL_DEF   DB "!","$"      ; 7
+EXIT            DB "EXIT","$"   ; 8
+CLEAR_SCREEN    DB "CLS",'$'    ;9
+
+OPS_OFSTS DW OPS_NUM DUP(0)
+
+Q DW 0 ; REFERS TO THE LETTER INDIX 
+  
 ;==================================================================
 ;==================================================================
 ;//////////////////////////MESSAGES////////////////////////////////
 ;==================================================================
 ;==================================================================
 
-WRONG_COMMAND DB "NOT DEFINED OPERATION",'$'
-ARRAY_RESULT_MSG DB 'RESULT: ',10,13,'$'
-NUM_RESULT_MSG DB 'RESULT: ','$'
+WRONG_COMMAND DB 10,13," NOT DEFINED OPERATION",10,13,'$'
+ARRAY_RESULT_MSG DB 'RESULT: ',10,10,'$'
+NUM_RESULT_MSG DB ' RESULT: ','$'
 ;==================================================================                
 ;//////////////////////////////HELP////////////////////////////////
 ;==================================================================
 
-MSG1 DB " LR  =>  LINEAR REGRESSION",10,13 ,
-     DB " MM  =>  MATRIX MULTIPLICATION ",10,13, 
-     DB " PT  =>  PASCAL TRIANGLE",10,13,        
-     DB " FI  =>  FIBONACCI SERIES",10,13,       
-     DB " C   =>  COMPINATION",10,13,
-     DB " P   =>  PERMUTATION",10,13,
-     DB " !   =>  FACTORIAL",10,13
-     DB "EXIT =>  EXIT",10,13
-     DB "CLS  =>  CLEAR",'$'
-  
-Q DW 0 ;FOR LOOP
+MSG1 DB "   LR   =>  LINEAR REGRESSION",10,13 ,
+     DB "  MM   =>  MATRIX MULTIPLICATION ",10,13, 
+     DB "  PT   =>  PASCAL TRIANGLE",10,13,        
+     DB "  FI   =>  FIBONACCI SERIES",10,13,       
+     DB "  C    =>  COMPINATION",10,13,
+     DB "  P    =>  PERMUTATION",10,13,
+     DB "  !    =>  FACTORIAL",10,13,
+     DB "  CLS  =>  CLEAR",10,13,
+     DB "  EXIT =>  EXIT",10,13,'$'
+     
+     
+     

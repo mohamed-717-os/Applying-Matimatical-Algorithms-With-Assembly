@@ -1,3 +1,12 @@
+; PROSEDURES IN THIS FILE IS:
+    ; * DRAW_LINE  
+    ; * DRAW_CYCLE  
+    ; * DRAW_SQUARE 
+    ; * DRAW_GRAPH 
+    ; * DRAW_GRID
+    ; * DRAW_CLICK
+    ; * VISUALIZE_LR
+
 .MODEL SMALL
 .386
 
@@ -56,11 +65,22 @@
         mov ax, 0012h  ; Set video mode 12h (640x480)
         int 10h
 
+     ;RETERN DEFULT VALUES
         MOV THETA[4], WORD PTR 0
         MOV THETA[6], WORD PTR 0
+        
+        PUSH OFFSET X
+        PUSH 30
+        CALL CLEAR_ARRAY
+        
+        PUSH OFFSET Y
+        PUSH 30
+        CALL CLEAR_ARRAY
       
         MOV EPOCHS, WORD PTR 100
 
+      ; -----------------------
+      
       CALL DRAW_GRAPH
       CALL DRAW_CLICK
 
@@ -157,7 +177,7 @@
            MOV AX, DX
            NEG AX
            ADD AX, FRAME_Y2
-           SHR AX, 5     ; SCALING Y BY 2^6
+           SHR AX, 5     ; SCALING Y BY 2^5
         
         
            MOV [DI], AX
@@ -166,7 +186,7 @@
            ; ADDING X DATA (X + X1)
           MOV AX, CX
           SUB AX, FRAME_X1 
-          SHR AX, 5     ; SCALING X BY 2^6
+          SHR AX, 5     ; SCALING X BY 2^5
           
           MOV [SI], AX
           ADD SI, 2 
@@ -174,17 +194,6 @@
           ; ADDING 1 TO THE NUMBER OF COLUMNS
            INC X[2]
            INC Y[2]
-
-        ; ------------------           
-         ;   MOV AH, 02     ; SET CURSOR
-         ;   MOV BH, 00     ; PAGE 
-         ;   MOV DH,4
-         ;   MOV DL,6
-         ;   INT 10H
-         ; 
-         ;   PUSH OFFSET X
-         ;   CALL PRINT_ARRAY  
-        ; ------------------------
           
           UP:
             mov ah, 01h   ; Test keyboard
@@ -405,7 +414,7 @@
         MUL BX
         
         ADD AX, LINE_B   ; Y = (X-X1)*SLOP + B
-        SHR AX, 7        ; FOR SCALING THETAS
+        SHR AX, 6        ; FOR SCALING THETAS
         
         
         MOV DX, FRAME_Y2   ;

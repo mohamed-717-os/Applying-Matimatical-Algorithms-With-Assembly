@@ -1,11 +1,13 @@
+; PROSEDURES IN THIS FILE IS:
+    ; * FACTORIAL      , (AND IT'S CALL PROC)
+    ; * PERMUTATIONS   , (AND IT'S CALL PROC)
+    ; * COMBINATION    , (AND IT'S CALL PROC)
+    ; * PASCAL         , (AND IT'S CALL PROC)
+    ; * PRINT_TRIANGLE
+
+
 .model small
 .CODE 
-
-;==================================================================
-;==================================================================                
-;/////////////////////////CALL PROCEDURES//////////////////////////
-;==================================================================
-;==================================================================
 
 ;=============================================================================
 ;                           PASCAL CALL
@@ -66,6 +68,10 @@ COMP_CALL PROC
     MOV N,0
     MOV R,0
     
+    LEA DX, INPUT_MSG
+    MOV AH,9H
+    INT 21H
+    
     CALL read_number
     MOV N,EBX
     
@@ -105,6 +111,10 @@ COMP_CALL ENDP
     
     MOV N,0
     MOV R,0
+
+    LEA DX, INPUT_MSG
+    MOV AH,9H
+    INT 21H
     
     CALL read_number
     MOV N,EBX
@@ -136,7 +146,8 @@ COMP_CALL ENDP
 
     PER_CALL ENDP
     
-;============================================================================= 
+;=============================================================================
+;                        FUNCTIONS ALGORITHM 
 ;============================================================================= 
 
 
@@ -281,9 +292,6 @@ COMP PROC
                          
      PRINT_TRIANGLE PROC
      
-      LEA DX,ARRAY_RESULT_MSG
-            MOV AH,9H
-            INT 21H
             
         MOV ECX,CSIZE 
         MOV EBX,0

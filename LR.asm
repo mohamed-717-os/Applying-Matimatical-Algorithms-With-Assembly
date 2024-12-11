@@ -1,3 +1,6 @@
+
+; THIS FILE JUST HAS LINEAR REGRESSION ALGORITHM:
+
 .MODEL SMALL
 .386
 .DATA
@@ -58,7 +61,7 @@
            
          SUBTRACT:
            MOV AX, Y[BX]
-           SHL AX, 7      ; SCALING Y TO SLOLVE THE FLOAT FLOORING
+           SHL AX, 6      ; SCALING Y TO SLOLVE THE FLOAT FLOORING
                            ; (WE WILL FIX THIS BY DIVIDING THETAS BY 2^6 WHILE DRAWING THE LINE) 
            SUB C[BX], AX
            

@@ -1,3 +1,6 @@
+
+; THIS FILE JUST HAS FIBONACI EMPLEMENTATION:
+
 .model small       
 .stack 100h        
 
@@ -51,6 +54,5 @@ fib_loop:
 
 END_FI:
         
-    ret        
-    
+    ret           
 fibonacci endp
