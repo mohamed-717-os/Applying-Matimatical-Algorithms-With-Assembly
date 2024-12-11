@@ -18,15 +18,15 @@ This project was created by ***Mohamed Ahmed***, ***Mohamed El Saeed***, and ***
 - Including some graphical drawing capabilities, such as lines and cycles.
 
 ### Project Structure
-#### Main.asm
+### Main.asm
 
 The central file that integrates all other modules and maps commands to their respective operations.
 
-#### DATA.asm
+### DATA.asm
 
 Contains reusable messages and variables used across other modules.
 
-#### matmul.asm
+### matmul.asm
 **Procedures:**
 
 - `MAT_CALL`: Calls the matrix multiplication operation.
@@ -37,7 +37,7 @@ Contains reusable messages and variables used across other modules.
 - `CLEAR_ARRAY`: Clears the contents of an array.
 - `PRINT_ARRAY`: Prints the contents of a matrix.
 - 
-#### Pascal.asm
+### Pascal.asm
 **Procedures:**
 
 - `FACTORIAL`: Computes the factorial of a number.
@@ -49,19 +49,19 @@ Contains reusable messages and variables used across other modules.
     > And has some procedures to handle user input and call the function
     
 
-#### Fibonacci.asm
+### Fibonacci.asm
 
 - Implements Fibonacci sequence generation and visualization.
 
-#### DOCS.asm
+### DOCS.asm
 
 - Handles documentation strings and descriptions.
 
-#### LR.asm
+### LR.asm
 
 - Implements linear regression-related procedures.
 
-#### Draw.asm
+### Draw.asm
 **Procedures:**
 
 - `DRAW_LINE`
@@ -73,7 +73,7 @@ Contains reusable messages and variables used across other modules.
 - `VISUALIZE_LR`: Passes inputs and Visualizes the result of linear regression.
     
 
-#### General.asm
+### General.asm
 **Procedures:**
 
 - `DRAW_NUM`: Converting hexadecimal numbers to decimal and printing them as a string.
