@@ -1,5 +1,9 @@
 # Applying-Matimatical-Algorithms-With-Assembly
 
+> بسم الله الرحمن الرحيم، الحمد لله رب العالمين، والصلاة والسلام على سيدنا محمد وعلى آله وصحبه أجمعين.
+> هذا البرنامج يمثل تطبيقا لمجموعة من الخوارزميات الرياضية بلغة التجميع، وكان ذلك بمثابة مشروع لمادة (لغة التجميع) في كلية الحاسبات والمعلومات جامعة المنصورة
+> قام بالعمل عليه ثلاثة طلاب في الصف الثالث ***محمد احمد حنفي*** و***محمد السعيد زكي*** و***محمد خالد الزعلوك*** 
+> ونرجوا من الله ان يكون في هذا نفعا لنا ولكم، وفيما يلي وصف أكثر تفصيلا باللغة الإنجليزية، صحبتكم السلامة.
 ### Introduction
 
 This project contains an implementation of several famous mathematical algorithms through a command-line interface, developed using assembly language (.86 and .386) with GUI Turbo Assembler (TASM).
@@ -14,11 +18,11 @@ This project was created by ***Mohamed Ahmed***, ***Mohamed El Saeed***, and ***
 ### Project Structure
 #### Main.asm
 
-    The central file that integrates all other modules and maps commands to their respective operations.
+The central file that integrates all other modules and maps commands to their respective operations.
 
 #### DATA.asm
 
-    Contains reusable messages and variables used across other modules.
+Contains reusable messages and variables used across other modules.
 
 #### matmul.asm
 **Procedures:**
