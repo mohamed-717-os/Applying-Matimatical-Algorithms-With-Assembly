@@ -52,7 +52,15 @@
 
       LINE_COLOR DB 0Ch
     ;------------------------------------------------------
+    ;------------------------------------------------------
+    
+    GRAPH_SHORTCUTS db '         ',26,' Click Any Key To Display The Tangent Line ',10,13,
+                    db '        ',26,' Click <0> To Clear the Graph',10,13,
+                    db '        ',26,' Click <Enter> To Go Back', '$'
+      
+    ;------------------------------------------------------      
 
+    
 .CODE
 
 ; =====================================================================================
@@ -80,9 +88,12 @@
         MOV EPOCHS, WORD PTR 100
 
       ; -----------------------
-      
-      CALL DRAW_GRAPH
-      CALL DRAW_CLICK
+     
+         CALL DRAW_GRAPH
+         
+         CALL DRAWING_TXT
+         
+         CALL DRAW_CLICK
 
       ; -----------------------
          CALL LINEAR_REGRESSION
@@ -442,4 +453,30 @@
         POPA
         RET
     DRAW_LINE ENDP
+;=============================================================================
+   ; //////////////////////  DRWING TEXT IN VIDEO MODE ///////////////////////
+;=============================================================================
+
+
+    DRAWING_TXT   PROC
+        ; SI >> TEXT OFFSET
+        
+            MOV AH, 02     ; SET CURSOR
+            MOV BH, 00     ; PAGE 
+            MOV DH,26
+            MOV DL,0
+            INT 10H
+          
+            MOV BX, 0
+        TEXT_LOOP:
+            mov dl, GRAPH_SHORTCUTS[BX]
+            mov ah, 2
+            int 21h
+            
+            INC BX
+            CMP GRAPH_SHORTCUTS[BX], '$'
+            JNE TEXT_LOOP
+            
+            RET
+     DRAWING_TXT ENDP
 ;=============================================================================
