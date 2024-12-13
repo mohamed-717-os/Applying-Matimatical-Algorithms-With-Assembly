@@ -13,14 +13,6 @@
 .DATA
     INCLUDE LR.asm
 
-    ;---------------- GRAPH COORDINATES -------------------
-      GRAPH_X DW 30            ; X-coordinate for the GRAPH
-      GRAPH_Y DW 20            ; Y-coordinate for the GRAPH
-    
-      GRAPH_W DW 250         ; Size of the GRAPH
-      GRAPH_H DW 150       ; Size of the GRAPH
-    ;------------------------------------------------------
-    
     ;---------------- SQUARE COORDINATES -------------------
       SQUARE_X DW 20            ; X-coordinate for the GRAPH
       SQUARE_Y DW 20           ; Y-coordinate for the GRAPH
