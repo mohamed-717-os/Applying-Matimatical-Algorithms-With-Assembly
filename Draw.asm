@@ -424,8 +424,8 @@
         XOR DX,DX         ;  (X-X1)*SLOP
         MUL BX
         
-        ADD AX, LINE_B   ; Y = (X-X1)*SLOP + B
-        SHR AX, 6        ; FOR SCALING THETAS
+        ADD AX, LINE_B             ; Y = (X-X1)*SLOP + B
+        SHR AX, THETA_SCALE        ; FOR SCALING THETAS
         
         
         MOV DX, FRAME_Y2   ;
