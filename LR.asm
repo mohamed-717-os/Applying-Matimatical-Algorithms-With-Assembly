@@ -15,7 +15,8 @@
         
         EPOCHS Dw 100
         ALPHA DW 100
-
+        
+        THETA_SCALE = 6     ;-> 2^6
 
 .CODE
 
@@ -61,8 +62,8 @@
            
          SUBTRACT:
            MOV AX, Y[BX]
-           SHL AX, 6      ; SCALING Y TO SLOLVE THE FLOAT FLOORING
-                           ; (WE WILL FIX THIS BY DIVIDING THETAS BY 2^6 WHILE DRAWING THE LINE) 
+           SHL AX, THETA_SCALE      ; SCALING Y TO SLOLVE THE FLOAT FLOORING
+                                    ; (WE WILL FIX THIS BY DIVIDING THETAS BY 2^6 WHILE DRAWING THE LINE) 
            SUB C[BX], AX
            
            ADD BX, 2
