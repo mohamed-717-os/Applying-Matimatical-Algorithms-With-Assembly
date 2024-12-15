@@ -1,4 +1,4 @@
-# Applying-Matimatical-Algorithms-With-Assembly
+# Applying-Mathematical-Algorithms-Using-Assembly-Language
 
 
 > بسم الله الرحمن الرحيم، الحمد لله رب العالمين، والصلاة والسلام على سيدنا محمد وعلى آله وصحبه أجمعين.  
