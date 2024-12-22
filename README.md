@@ -8,9 +8,7 @@
 > ونرجوا من الله ان يكون في هذا نفعا لنا ولكم، وفيما يلي وصف أكثر تفصيلا باللغة الإنجليزية، صحبتكم السلامة.
 ### Introduction
 
-This project contains an implementation of several famous mathematical algorithms through a command-line interface, developed using assembly language (.86 and .386) with GUI Turbo Assembler (TASM).
-
-This project was created by ***Mohamed Ahmed***, ***Mohamed El Saeed***, and ***Mohamed Khaled*** as part of an assembly course at the Faculty of Computer and Information Science, Mansoura University.
+This project implements several famous mathematical algorithms through a command-line interface, developed using assembly language (.86 and .386) with GUI Turbo Assembler (TASM).
 
 ### Features
 
@@ -20,7 +18,7 @@ This project was created by ***Mohamed Ahmed***, ***Mohamed El Saeed***, and ***
 ### Project Structure
 ### Main.asm
 
-The central file that integrates all other modules and maps commands to their respective operations.
+The central file integrates all other modules and maps commands to their respective operations.
 
 ### DATA.asm
 
@@ -86,3 +84,40 @@ Contains reusable messages and variables used across other modules.
 - ![image](https://github.com/user-attachments/assets/25384ebc-65cd-45ae-a798-d4be446a1fa7)
 - ![image](https://github.com/user-attachments/assets/49f8ec48-91f1-4c40-bb06-a6bf3f1a9516)
 - ![image](https://github.com/user-attachments/assets/b29c3346-281d-4ef3-be7d-2f8842565d34)
+
+### Notes
+
+- **Input Requirement:**  
+  The input must be in capital letters.
+
+- **Linear Regression Accuracy:**  
+  The result of the linear regression is not perfect because the program processes only decimal numbers. To address this issue partially, we applied a scaling technique to the theta values by scaling the `y` values. Specifically, the `y` values are multiplied by $2^6$, which directly scales the theta values during the gradient descent process.
+
+The scaling is illustrated as follows:
+
+$$
+\theta_1 := \theta_0 - \frac{1}{\alpha \cdot n} \cdot ([x \cdot \theta_0 - y] \cdot x)
+$$
+
+When scaling theta:
+
+$$
+2^6 \cdot \theta_1 := 2^6 \cdot \theta_0 - \frac{1}{\alpha \cdot n} \cdot ([x \cdot 2^6 \cdot \theta_0 - 2^6 \cdot y] \cdot x)
+$$
+
+$$
+2^6 \cdot \theta_2 := 2^6 \cdot \theta_1 - \frac{1}{\alpha \cdot n} \cdot ([x \cdot 2^6 \cdot \theta_1 - 2^6 \cdot y] \cdot x)
+$$
+
+$$
+\dots\dots
+$$
+
+$$
+2^6 \cdot \theta_m := 2^6 \cdot \theta_{(m-1)} - \frac{1}{\alpha \cdot n} \cdot ([x \cdot 2^6 \cdot \theta_{(m-1)} - 2^6 \cdot y] \cdot x)
+$$
+
+Since the initial value is $\theta_0 = 0$, scaling y automatically scales $\theta_1$, and this scaled $\theta_1$ propagates to scale $\theta_2$, $\theta_3$, and so on.
+
+When drawing the regression line, we account for the scaling by dividing the `y` values by $2^6$, and this ensures the output remains consistent and accurate after scaling adjustments.
+
